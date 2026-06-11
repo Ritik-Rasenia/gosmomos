@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\FranchiseLeadController as AdminFranchiseLeadController;
 use App\Http\Controllers\Admin\EventLeadController as AdminEventLeadController;
 use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,10 @@ Route::post('/login/otp/send', [OtpController::class, 'sendOtp'])->name('login.o
 Route::post('/login/otp/verify', [OtpController::class, 'verifyOtp'])->name('login.otp.verify');
 Route::post('/login/password', [LoginController::class, 'login'])->name('login.password');
 Route::any('/logout', [OtpController::class, 'logout'])->name('logout');
+
+// Dedicated Admin Auth Gate
+Route::get('/admin/login', [AdminAuthController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');
 
 /*
 |--------------------------------------------------------------------------
@@ -107,6 +112,9 @@ Route::middleware(['auth', 'track'])->group(function () {
     // 4. ADMIN & SUPER ADMIN PANEL
     Route::middleware(['role:super_admin,admin,store_manager'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', function() { return view('admin.dashboard'); })->name('dashboard');
+        
+        // Secure Logout
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
         
         // Products CRUD
         Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');

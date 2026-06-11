@@ -11,6 +11,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectTo(
+            guests: function (\Illuminate\Http\Request $request) {
+                if ($request->is('admin') || $request->is('admin/*')) {
+                    return route('admin.login');
+                }
+                return route('login');
+            }
+        );
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'track' => \App\Http\Middleware\TrackActivity::class,

@@ -189,9 +189,12 @@
             <a href="{{ route('admin.settings') }}" class="sidebar-link {{ request()->is('admin/settings*') ? 'active' : '' }}">
                 <i class="bi bi-gear"></i> Settings
             </a>
-            <a href="{{ route('logout') }}" class="sidebar-link text-danger mt-5">
+            <a href="#" class="sidebar-link text-danger mt-5" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>
+            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
         </div>
     </aside>
 
