@@ -23,10 +23,10 @@
 }
 .sidebar-link:hover, .sidebar-link.active {
     background: rgba(15, 81, 50, 0.08);
-    color: #0F5132;
+    color: #FF7A00;
 }
 .wallet-box {
-    background: linear-gradient(135deg, #0F5132 0%, #157347 100%);
+    background: linear-gradient(135deg, #FF7A00 0%, #E26C00 100%);
     color: white;
     border-radius: 24px;
     padding: 35px;
@@ -42,7 +42,7 @@
         <div class="col-lg-3">
             <div class="dashboard-sidebar">
                 <div class="text-center mb-4">
-                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #0F5132, #D4A017); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
+                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #FF7A00, #FF7A00); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                     <h5 class="fw-bold mb-1">{{ Auth::user()->name }}</h5>

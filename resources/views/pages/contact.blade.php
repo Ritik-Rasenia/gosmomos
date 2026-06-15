@@ -4,11 +4,6 @@
 
 @section('styles')
 <style>
-.contact-hero {
-    background: linear-gradient(135deg, #0a3620 0%, #0F5132 100%);
-    padding: 80px 0 40px;
-    color: white;
-}
 .contact-card {
     background: white;
     border-radius: 20px;
@@ -19,12 +14,19 @@
 @endsection
 
 @section('content')
-<div class="contact-hero text-center">
-    <div class="container">
-        <h1 class="fw-bold">Contact Us</h1>
-        <p class="text-white-75 mb-0">Have questions, feedback, or suggestions? Reach out to us!</p>
+<section class="page-hero text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 text-uppercase">Get In Touch</span>
+        <h1 class="display-4 fw-extrabold text-white mb-2">Contact Us</h1>
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Contact</li>
+            </ol>
+        </nav>
+        <p class="lead text-white-75 max-width-600 mx-auto">Have questions, feedback, or suggestions? Reach out to us!</p>
     </div>
-</div>
+</section>
 
 <div class="container py-5">
     <div class="row g-5">
@@ -34,7 +36,7 @@
             
             <div class="mt-4">
                 <div class="d-flex align-items-center gap-3 mb-3">
-                    <div style="width:48px; height:48px; border-radius:12px; background:rgba(15,81,50,0.1); color:#0F5132; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:48px; height:48px; border-radius:12px; background:rgba(15,81,50,0.1); color:#FF7A00; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="bi bi-geo-alt-fill fs-5"></i>
                     </div>
                     <div>
@@ -43,7 +45,7 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-3 mb-3">
-                    <div style="width:48px; height:48px; border-radius:12px; background:rgba(15,81,50,0.1); color:#0F5132; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:48px; height:48px; border-radius:12px; background:rgba(15,81,50,0.1); color:#FF7A00; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="bi bi-telephone-fill fs-5"></i>
                     </div>
                     <div>
@@ -52,7 +54,7 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <div style="width:48px; height:48px; border-radius:12px; background:rgba(15,81,50,0.1); color:#0F5132; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:48px; height:48px; border-radius:12px; background:rgba(15,81,50,0.1); color:#FF7A00; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="bi bi-envelope-fill fs-5"></i>
                     </div>
                     <div>

@@ -12,12 +12,6 @@
     </a>
 </div>
 
-@if(session('success'))
-    <div class="alert alert-success rounded-3 mb-4">
-        {{ session('success') }}
-    </div>
-@endif
-
 <div class="admin-card p-4">
     @if($products->count())
     <div class="table-responsive">
@@ -39,9 +33,9 @@
                     <td>
                         <div class="d-flex align-items-center gap-3">
                             @if($prod->image_url)
-                                <img src="{{ $prod->image_url }}" alt="{{ $prod->name }}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;">
+                                <img src="{{ $prod->image_url }}" alt="{{ $prod->name }}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1625220194771-7ebedd0b4d11?auto=format&fit=crop&w=100&q=80';">
                             @else
-                                <div style="width:40px; height:40px; border-radius:8px; background:linear-gradient(135deg,#0F5132,#D4A017); display:flex; align-items:center; justify-content:center; font-size:20px;">🥟</div>
+                                <div style="width:40px; height:40px; border-radius:8px; background:linear-gradient(135deg,#FF7A00,#FF7A00); display:flex; align-items:center; justify-content:center; font-size:20px;">🥟</div>
                             @endif
                             <div>
                                 <span class="fw-bold d-block">{{ $prod->name }}</span>
@@ -72,9 +66,17 @@
                         </span>
                     </td>
                     <td class="text-end">
-                        <button class="btn btn-outline-danger btn-sm rounded-circle" title="Delete" onclick="deleteProduct({{ $prod->id }})">
-                            <i class="bi bi-trash"></i>
-                        </button>
+                        <div class="d-inline-flex gap-1 justify-content-end">
+                            <a href="{{ route('admin.products.show', $prod->id) }}" class="btn btn-sm btn-outline-info rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; padding: 0;" title="View Details">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                            <a href="{{ route('admin.products.edit', $prod->id) }}" class="btn btn-sm btn-outline-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; padding: 0;" title="Edit">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <button class="btn btn-sm btn-outline-danger rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; padding: 0;" title="Delete" onclick="deleteProduct({{ $prod->id }})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
                 @endforeach
@@ -98,11 +100,21 @@
 @section('scripts')
 <script>
 function deleteProduct(id) {
-    if (confirm('Are you sure you want to delete this product?')) {
-        const form = document.getElementById('delete-product-form');
-        form.action = `/admin/products/delete/${id}`;
-        form.submit();
-    }
+    Swal.fire({
+        title: 'Delete Product?',
+        text: 'Are you sure you want to delete this product? This action cannot be undone!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#FF7A00',
+        cancelButtonColor: '#0E101A',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const form = document.getElementById('delete-product-form');
+            form.action = `/admin/products/delete/${id}`;
+            form.submit();
+        }
+    });
 }
 </script>
 @endsection

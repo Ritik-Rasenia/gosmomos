@@ -2,33 +2,73 @@
 @section('title', 'Menu — GOS MOMO')
 @section('styles')
 <style>
-.menu-hero { background: linear-gradient(135deg, #0F5132 0%, #157347 100%); padding: 60px 0 40px; color: white; }
+/* Mobile background */
+@media (max-width: 575.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/menu-mobile.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Tablet background */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/menu-tablet.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Laptop background */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/menu-laptop.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Desktop background */
+@media (min-width: 1200px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/menu-desktop.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
 .filter-bar { background: white; border-bottom: 1px solid rgba(0,0,0,0.06); padding: 16px 0; position: sticky; top: 70px; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
-.filter-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 20px; border: 2px solid #e9ecef; background: white; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: #495057; }
-.filter-chip:hover, .filter-chip.active { border-color: #0F5132; background: #0F5132; color: white; }
+.filter-chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 8px; border: 2px solid #e9ecef; background: white; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; text-decoration: none; color: #495057; }
+.filter-chip:hover, .filter-chip.active { border-color: #FF7A00; background: #FF7A00; color: white; }
 .product-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); transition: all 0.3s ease; }
 .product-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(15,81,50,0.1); }
-.product-img-placeholder { height: 180px; background: linear-gradient(135deg, #0F5132, #D4A017); display: flex; align-items: center; justify-content: center; font-size: 60px; }
-.price-tag { font-size: 1.2rem; font-weight: 800; color: #0F5132; font-family: 'Outfit',sans-serif; }
+.product-img-placeholder { height: 180px; background: linear-gradient(135deg, #FF7A00, #FF7A00); display: flex; align-items: center; justify-content: center; font-size: 60px; }
+.price-tag { font-size: 1.2rem; font-weight: 800; color: #FF7A00; font-family: 'Outfit',sans-serif; }
 .veg-dot { width: 20px; height: 20px; border: 2px solid #28a745; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .veg-dot::after { content: ''; width: 8px; height: 8px; background: #28a745; border-radius: 50%; }
 .nonveg-dot { width: 20px; height: 20px; border: 2px solid #dc3545; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .nonveg-dot::after { content: ''; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #dc3545; }
-.btn-add { background: linear-gradient(135deg, #0F5132, #157347); color: white; border: none; border-radius: 25px; padding: 7px 18px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s ease; }
+.btn-add { background: linear-gradient(135deg, #FF7A00, #E26C00); color: white; border: none; border-radius: 8px; padding: 7px 18px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s ease; }
 .btn-add:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(15,81,50,0.3); }
 .spice-indicator { display: flex; gap: 2px; }
 .spice-dot { width: 6px; height: 6px; border-radius: 50%; background: #e9ecef; }
 .spice-dot.active { background: #E63946; }
+.text-hover-orange { transition: color 0.2s ease-in-out; }
+.text-hover-orange:hover { color: #FF7A00 !important; }
 </style>
 @endsection
 
 @section('content')
-<div class="menu-hero">
-    <div class="container">
-        <h1 class="fw-bold mb-2">Our Menu 🥟</h1>
-        <p class="text-white-75 mb-0">Fresh, hygienic, and made with love. Pick your momo mood!</p>
+<section class="page-hero text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 text-uppercase">Fresh & Tasty</span>
+        <h1 class="display-4 fw-extrabold text-white mb-2">Our Menu 🥟</h1>
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Menu</li>
+            </ol>
+        </nav>
+        <p class="lead text-white-75 max-width-600 mx-auto">Fresh, hygienic, and made with love. Pick your momo mood!</p>
     </div>
-</div>
+</section>
 
 <div class="filter-bar">
     <div class="container">
@@ -67,17 +107,19 @@
         <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 4) * 80 }}">
             <div class="product-card">
                 <div class="position-relative">
-                    @if($product->image_url)
-                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-100" style="height:180px; object-fit:cover;">
-                    @else
-                        <div class="product-img-placeholder">🥟</div>
-                    @endif
+                    <a href="{{ route('menu.show', $product->slug) }}">
+                        @if($product->image_url)
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}" class="w-100" style="height:180px; object-fit:cover;" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1625220194771-7ebedd0b4d11?auto=format&fit=crop&w=600&q=80';">
+                        @else
+                            <div class="product-img-placeholder">🥟</div>
+                        @endif
+                    </a>
 
                     @if($product->is_bestseller)
                         <span class="position-absolute top-0 start-0 m-2 badge" style="background:#E63946; font-size: 10px;">BESTSELLER</span>
                     @endif
                     @if($product->is_new)
-                        <span class="position-absolute top-0 {{ $product->is_bestseller ? 'start-50' : 'start-0' }} m-2 badge" style="background:#D4A017; font-size: 10px;">NEW</span>
+                        <span class="position-absolute top-0 {{ $product->is_bestseller ? 'start-50' : 'start-0' }} m-2 badge" style="background:#FF7A00; font-size: 10px;">NEW</span>
                     @endif
                 </div>
                 <div class="p-3">
@@ -88,7 +130,9 @@
                             {{ $product->average_rating }}
                         </div>
                     </div>
-                    <h6 class="fw-bold mb-1">{{ $product->name }}</h6>
+                    <a href="{{ route('menu.show', $product->slug) }}" class="text-decoration-none text-dark">
+                        <h6 class="fw-bold mb-1 text-hover-orange">{{ $product->name }}</h6>
+                    </a>
                     <p class="text-muted small mb-2" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ $product->short_description }}</p>
 
                     {{-- Spice Level --}}
@@ -141,28 +185,38 @@
 
 @section('scripts')
 <script>
-$(document).on('click', '.add-to-cart-btn', function() {
-    const btn = $(this);
-    const card = btn.closest('.product-card');
-    const productId = btn.data('product-id');
-    const variantSelect = card.find('.variant-select');
-    const variantId = variantSelect.length ? variantSelect.val() : null;
+$(document).ready(function() {
+    // Dynamic price updater when selecting different variants
+    $(document).on('change', '.variant-select', function() {
+        const select = $(this);
+        const price = select.find(':selected').data('price');
+        const card = select.closest('.product-card');
+        card.find('.price-tag').text('₹' + parseFloat(price).toFixed(0));
+    });
 
-    btn.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i>');
+    $(document).on('click', '.add-to-cart-btn', function() {
+        const btn = $(this);
+        const card = btn.closest('.product-card');
+        const productId = btn.data('product-id');
+        const variantSelect = card.find('.variant-select');
+        const variantId = variantSelect.length ? variantSelect.val() : null;
 
-    $.ajax({
-        url: "{{ route('cart.add') }}",
-        method: 'POST',
-        data: { _token: "{{ csrf_token() }}", product_id: productId, variant_id: variantId, quantity: 1 },
-        success: function(res) {
-            if (res.success) {
-                btn.html('<i class="bi bi-check-lg"></i>');
-                setTimeout(() => btn.prop('disabled', false).html('<i class="bi bi-plus-lg me-1"></i> Add'), 1500);
-                const count = res.cart_count;
-                $('#desktop-cart-count, #mobile-cart-badge, #mobile-bottom-cart-badge, #floating-cart-badge').text(count).removeClass('d-none');
-            }
-        },
-        error: () => { btn.prop('disabled', false).html('<i class="bi bi-plus-lg me-1"></i> Add'); }
+        btn.prop('disabled', true).html('<i class="bi bi-hourglass-split"></i>');
+
+        $.ajax({
+            url: "{{ route('cart.add') }}",
+            method: 'POST',
+            data: { _token: "{{ csrf_token() }}", product_id: productId, variant_id: variantId, quantity: 1 },
+            success: function(res) {
+                if (res.success) {
+                    btn.html('<i class="bi bi-check-lg"></i>');
+                    setTimeout(() => btn.prop('disabled', false).html('<i class="bi bi-plus-lg me-1"></i> Add'), 1500);
+                    const count = res.cart_count;
+                    $('#desktop-cart-count, #mobile-cart-badge, #mobile-bottom-cart-badge, #floating-cart-badge').text(count).removeClass('d-none');
+                }
+            },
+            error: () => { btn.prop('disabled', false).html('<i class="bi bi-plus-lg me-1"></i> Add'); }
+        });
     });
 });
 </script>

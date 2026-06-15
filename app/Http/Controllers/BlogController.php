@@ -35,7 +35,12 @@ class BlogController extends Controller
 
     public function show($slug)
     {
-        $blog = Blog::published()->where('slug', $slug)->firstOrFail();
+        $blog = Blog::published()
+            ->with(['category', 'author', 'reviews' => function($query) {
+                $query->approved()->with('user');
+            }])
+            ->where('slug', $slug)
+            ->firstOrFail();
         
         // Increment views safely
         $blog->increment('views');
@@ -46,6 +51,34 @@ class BlogController extends Controller
             ->take(3)
             ->get();
 
-        return view('pages.blog.show', compact('blog', 'relatedBlogs'));
+        $categories = \App\Models\BlogCategory::all();
+        
+        $popularBlogs = Blog::published()
+            ->where('id', '!=', $blog->id)
+            ->orderBy('views', 'desc')
+            ->take(3)
+            ->get();
+
+        return view('pages.blog.show', compact('blog', 'relatedBlogs', 'categories', 'popularBlogs'));
+    }
+
+    public function storeReview(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        $blog = Blog::findOrFail($id);
+
+        \App\Models\BlogReview::create([
+            'user_id' => auth()->id(),
+            'blog_id' => $blog->id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+            'is_approved' => true, // Auto-approved for simple setup
+        ]);
+
+        return back()->with('success', 'Your review has been posted successfully!');
     }
 }

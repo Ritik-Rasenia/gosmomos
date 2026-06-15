@@ -13,7 +13,7 @@
 </div>
 
 <div class="admin-card p-4">
-    <form action="#" method="POST">
+    <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row g-3">
             <div class="col-md-6">
@@ -42,8 +42,12 @@
                 </select>
             </div>
             <div class="col-12">
-                <label class="form-label fw-semibold small">Short Description</label>
-                <input type="text" name="short_description" class="form-control rounded-3" placeholder="Brief tagline shown on the cards">
+                <label class="form-label fw-semibold small">Product Image *</label>
+                <input type="file" name="image" class="form-control rounded-3" accept="image/*">
+            </div>
+            <div class="col-12">
+                <label class="form-label fw-semibold small">Short Description *</label>
+                <input type="text" name="short_description" class="form-control rounded-3" placeholder="Brief tagline shown on the cards" required>
             </div>
             <div class="col-12">
                 <label class="form-label fw-semibold small">Detailed Description</label>

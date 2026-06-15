@@ -52,4 +52,31 @@ class MenuController extends Controller
 
         return view('menu.show', compact('product', 'relatedProducts', 'reviews'));
     }
+
+    public function storeReview(Request $request, $id)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        $product = Product::findOrFail($id);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('reviews', 'public');
+        }
+
+        \App\Models\Review::create([
+            'user_id' => auth()->id(),
+            'product_id' => $product->id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+            'image' => $imagePath,
+            'is_approved' => true,
+        ]);
+
+        return back()->with('success', 'Your review has been submitted successfully!');
+    }
 }

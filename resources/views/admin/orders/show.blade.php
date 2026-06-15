@@ -58,10 +58,26 @@
     <div class="col-lg-4">
         <div class="admin-card p-4 mb-4">
             <h5 class="fw-bold mb-4">Update Status</h5>
-            <form action="#" method="POST">
+            
+            <div class="mb-3 border-bottom pb-3">
+                <span class="text-muted small d-block">PAYMENT METHOD</span>
+                <span class="badge bg-dark rounded-pill px-3 mt-1 fs-6">
+                    @if($order->payment_method === 'cod')
+                        Cash on Delivery (COD)
+                    @elseif($order->payment_method === 'wallet')
+                        GOS Wallet
+                    @elseif($order->payment_method === 'razorpay')
+                        Online (Razorpay)
+                    @else
+                        {{ strtoupper($order->payment_method) }}
+                    @endif
+                </span>
+            </div>
+
+            <form action="{{ route('admin.orders.update', $order->id) }}" method="POST">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label fw-semibold small">Order Status</label>
+                    <label class="form-label fw-semibold small text-muted">Order Status</label>
                     <select name="status" class="form-select rounded-3">
                         @foreach(['placed','confirmed','preparing','packed','out_for_delivery','delivered','cancelled'] as $st)
                             <option value="{{ $st }}" {{ $order->status === $st ? 'selected' : '' }}>{{ ucfirst(str_replace('_',' ',$st)) }}</option>
@@ -69,13 +85,33 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-semibold small">Payment Status</label>
+                    <label class="form-label fw-semibold small text-muted">Payment Status</label>
                     <select name="payment_status" class="form-select rounded-3">
                         <option value="pending" {{ $order->payment_status === 'pending' ? 'selected' : '' }}>Pending</option>
                         <option value="paid" {{ $order->payment_status === 'paid' ? 'selected' : '' }}>Paid</option>
                         <option value="failed" {{ $order->payment_status === 'failed' ? 'selected' : '' }}>Failed</option>
                     </select>
                 </div>
+
+                @if($order->address_id)
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small text-muted">Assign Delivery Boy</label>
+                    <select name="delivery_partner_id" class="form-select rounded-3">
+                        <option value="">-- Pool (No Assignment) --</option>
+                        @foreach($deliveryPartners as $partner)
+                            <option value="{{ $partner->id }}" {{ $order->deliveryAssignment?->delivery_partner_id == $partner->id ? 'selected' : '' }}>
+                                {{ $partner->user->name }} ({{ $partner->is_online ? 'Online' : 'Offline' }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                @else
+                <div class="mb-4">
+                    <span class="text-muted small d-block mb-1">ASSIGNMENT</span>
+                    <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1">Self-Pickup Order</span>
+                </div>
+                @endif
+
                 <button type="submit" class="btn btn-success rounded-pill w-100 py-2">Update Order</button>
             </form>
         </div>

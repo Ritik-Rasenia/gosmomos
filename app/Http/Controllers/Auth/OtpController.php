@@ -9,6 +9,10 @@ use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use App\Mail\SendOtpMail;
+use App\Mail\WelcomeUserMail;
 
 class OtpController extends Controller
 {
@@ -20,24 +24,70 @@ class OtpController extends Controller
         return view('auth.login');
     }
 
+    public function showRegisterForm()
+    {
+        if (Auth::check()) {
+            return redirect()->route('customer.dashboard');
+        }
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'required|digits:10|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'status' => 'active',
+            'referral_code' => 'GOS' . strtoupper(Str::random(6)),
+        ]);
+
+        // Assign customer role
+        $customerRole = Role::where('slug', 'customer')->first();
+        if ($customerRole) {
+            $user->roles()->sync([$customerRole->id]);
+        }
+
+        // Create wallet
+        $user->wallet()->create(['balance' => 0.00]);
+
+        // Send Welcome Email
+        try {
+            Mail::to($user->email)->send(new WelcomeUserMail($user));
+        } catch (\Exception $e) {
+            Log::error("Failed to send welcome email to {$user->email}: " . $e->getMessage());
+        }
+
+        // Log the user in
+        Auth::login($user, true);
+
+        return redirect()->route('customer.dashboard')->with('success', 'Account created successfully! Welcome to GOS MOMO.');
+    }
+
     public function sendOtp(Request $request)
     {
         $request->validate([
-            'phone' => 'required|digits:10',
+            'email' => 'required|email',
         ]);
 
-        $phone = $request->phone;
+        $email = $request->email;
         
         // Find or create user
-        $user = User::where('phone', $phone)->first();
+        $user = User::where('email', $email)->first();
         
-        $isNewUser = false;
         if (!$user) {
-            $isNewUser = true;
-            // Create user with temp name, they can update in profile
+            // Create user with temp name
             $user = User::create([
                 'name' => 'GOS Customer ' . Str::random(5),
-                'phone' => $phone,
+                'email' => $email,
                 'status' => 'active',
                 'referral_code' => 'GOS' . strtoupper(Str::random(6)),
             ]);
@@ -50,37 +100,49 @@ class OtpController extends Controller
 
             // Create wallet
             $user->wallet()->create(['balance' => 0.00]);
+
+            // Send Welcome Email
+            try {
+                Mail::to($user->email)->send(new WelcomeUserMail($user));
+            } catch (\Exception $e) {
+                Log::error("Failed to send welcome email to {$user->email}: " . $e->getMessage());
+            }
         }
 
-        // Generate 6-digit OTP (for testing, we use 123456, otherwise random)
-        $otp = '123456'; 
-        if (config('app.env') !== 'local') {
-            $otp = rand(100000, 999999);
-        }
+        // Generate random 6-digit OTP
+        $otp = rand(100000, 999999);
 
         $user->update([
             'otp' => $otp,
             'otp_expires_at' => now()->addMinutes(10),
         ]);
 
-        // In production, send SMS here. For local/development, we log it.
-        Log::info("OTP for GOS MOMO login for phone {$phone} is: {$otp}");
+        // Send OTP via email
+        try {
+            Mail::to($user->email)->send(new SendOtpMail($otp));
+            Log::info("OTP for GOS MOMO login for email {$email} is: {$otp}");
+        } catch (\Exception $e) {
+            Log::error("Failed to send OTP email to {$email}: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to send OTP email. Please try again later.',
+            ], 500);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'OTP sent successfully! Use 123456 for testing.',
-            'is_new_user' => $isNewUser,
+            'message' => 'OTP sent successfully! Check your email inbox.',
         ]);
     }
 
     public function verifyOtp(Request $request)
     {
         $request->validate([
-            'phone' => 'required|digits:10',
+            'email' => 'required|email',
             'otp' => 'required|digits:6',
         ]);
 
-        $user = User::where('phone', $request->phone)
+        $user = User::where('email', $request->email)
                     ->where('otp', $request->otp)
                     ->where('otp_expires_at', '>', now())
                     ->first();

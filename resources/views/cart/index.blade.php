@@ -11,7 +11,11 @@
             @foreach($cart->items as $item)
             <div class="glass-card p-4 mb-3 cart-item-row" id="cart-item-{{ $item->id }}">
                 <div class="d-flex align-items-start gap-3">
-                    <div style="width:70px; height:70px; border-radius:12px; background: linear-gradient(135deg, #0F5132, #D4A017); display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0;">🥟</div>
+                    @if($item->product->image_url)
+                        <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" style="width:70px; height:70px; border-radius:12px; object-fit:cover; flex-shrink:0;">
+                    @else
+                        <div style="width:70px; height:70px; border-radius:12px; background: linear-gradient(135deg, #FF7A00, #FF7A00); display:flex; align-items:center; justify-content:center; font-size:32px; flex-shrink:0;">🥟</div>
+                    @endif
                     <div class="flex-grow-1">
                         <h6 class="fw-bold mb-1">{{ $item->product->name }}</h6>
                         @if($item->variant)
@@ -103,18 +107,29 @@ function updateQty(itemId, qty) {
 }
 
 function removeItem(itemId) {
-    if (!confirm('Remove this item from cart?')) return;
-    $.ajax({
-        url: "{{ route('cart.remove') }}",
-        method: 'POST',
-        data: { _token: "{{ csrf_token() }}", item_id: itemId },
-        success: function(res) {
-            if (res.success) {
-                $('#cart-item-' + itemId).fadeOut(400, function() {
-                    $(this).remove();
-                    if ($('.cart-item-row').length === 0) location.reload();
-                });
-            }
+    Swal.fire({
+        title: 'Remove Item?',
+        text: 'Are you sure you want to remove this item from your cart?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#FF7A00',
+        cancelButtonColor: '#0E101A',
+        confirmButtonText: 'Yes, remove it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "{{ route('cart.remove') }}",
+                method: 'POST',
+                data: { _token: "{{ csrf_token() }}", item_id: itemId },
+                success: function(res) {
+                    if (res.success) {
+                        $('#cart-item-' + itemId).fadeOut(400, function() {
+                            $(this).remove();
+                            if ($('.cart-item-row').length === 0) location.reload();
+                        });
+                    }
+                }
+            });
         }
     });
 }

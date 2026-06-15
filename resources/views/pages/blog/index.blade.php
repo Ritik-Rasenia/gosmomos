@@ -4,11 +4,6 @@
 
 @section('styles')
 <style>
-.blog-hero {
-    background: linear-gradient(135deg, #0F5132 0%, #157347 100%);
-    padding: 80px 0 40px;
-    color: white;
-}
 .blog-card {
     background: white;
     border-radius: 20px;
@@ -25,12 +20,19 @@
 @endsection
 
 @section('content')
-<div class="blog-hero text-center">
-    <div class="container">
-        <h1 class="fw-bold">GOS MOMO Stories</h1>
-        <p class="text-white-75 mb-0">Discover recipes, street food culture, franchising tips, and company updates.</p>
+<section class="page-hero text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 text-uppercase">News & Articles</span>
+        <h1 class="display-4 fw-extrabold text-white mb-2">GOS MOMO Stories</h1>
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Blog</li>
+            </ol>
+        </nav>
+        <p class="lead text-white-75 max-width-600 mx-auto">Discover recipes, street food culture, franchising tips, and company updates.</p>
     </div>
-</div>
+</section>
 
 <div class="container py-5">
     {{-- Categories & Search --}}
@@ -54,7 +56,7 @@
                     @if($blog->image_url)
                         <img src="{{ $blog->image_url }}" class="w-100" style="height:200px; object-fit:cover;" alt="{{ $blog->title }}">
                     @else
-                        <div style="height:200px; background:linear-gradient(135deg, #0F5132, #D4A017); display:flex; align-items:center; justify-content:center; font-size:60px;">📝</div>
+                        <div style="height:200px; background:linear-gradient(135deg, #FF7A00, #FF7A00); display:flex; align-items:center; justify-content:center; font-size:60px;">📝</div>
                     @endif
                     <div class="p-4">
                         <span class="badge bg-success-subtle text-success mb-2">{{ $blog->category->name }}</span>

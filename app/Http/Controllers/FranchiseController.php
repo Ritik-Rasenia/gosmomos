@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\FranchiseLead;
 use App\Models\FranchiseDocument;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AdminFranchiseLeadMail;
 
 class FranchiseController extends Controller
 {
@@ -29,6 +31,22 @@ class FranchiseController extends Controller
         ]);
 
         $lead = FranchiseLead::create($request->except('id_proof'));
+
+        // Notify Admins
+        \App\Models\Notification::notifyAdmins(
+            'franchise',
+            "New Franchise Application \u2014 {$lead->city}",
+            "A new franchise application from {$lead->name} ({$lead->phone}) for {$lead->city}, {$lead->state}. Model: " . ucfirst($lead->franchise_type) . ". Budget: {$lead->investment_budget}.",
+            ['city' => $lead->city, 'type' => $lead->franchise_type, 'budget' => $lead->investment_budget]
+        );
+
+        // Send Emails
+        try {
+            Mail::to(setting('contact_email', 'info@gosmomo.com'))->send(new AdminFranchiseLeadMail($lead, true));
+            Mail::to($lead->email)->send(new AdminFranchiseLeadMail($lead, false));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send franchise lead emails: " . $e->getMessage());
+        }
 
         // Handle file upload
         if ($request->hasFile('id_proof')) {

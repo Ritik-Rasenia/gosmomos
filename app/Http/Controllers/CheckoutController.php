@@ -14,6 +14,9 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderPlacedMail;
+use App\Mail\AdminNewOrderMail;
 
 class CheckoutController extends Controller
 {
@@ -94,6 +97,7 @@ class CheckoutController extends Controller
             'payment_method' => 'required|in:cod,razorpay,wallet',
             'coupon_code' => 'nullable|string|exists:coupons,code',
             'special_instructions' => 'nullable|string',
+            'razorpay_payment_id' => 'required_if:payment_method,razorpay|nullable|string',
         ]);
 
         $cart = $this->getCart();
@@ -190,9 +194,33 @@ class CheckoutController extends Controller
                 'order_id' => $order->id,
                 'user_id' => Auth::id(),
                 'gateway' => $request->payment_method,
+                'transaction_id' => $request->payment_method === 'razorpay' ? $request->razorpay_payment_id : null,
                 'amount' => $total,
                 'status' => $request->payment_method === 'cod' ? 'pending' : 'paid',
+                'gateway_response' => $request->payment_method === 'razorpay' ? ['razorpay_payment_id' => $request->razorpay_payment_id] : null,
             ]);
+
+            // Send Notifications
+            \App\Models\Notification::send(
+                Auth::id(),
+                'order_placed',
+                'Order Placed Successfully!',
+                "Your order #{$order->order_number} of ₹" . number_format($total, 2) . " has been placed successfully. Thank you for choosing GOS MOMO!"
+            );
+
+            \App\Models\Notification::notifyAdmins(
+                'new_order',
+                'New Order Received',
+                "A new order #{$order->order_number} has been placed by " . Auth::user()->name . " (Total: ₹" . number_format($total, 2) . ")."
+            );
+
+            // Send Emails
+            try {
+                Mail::to(Auth::user()->email)->send(new OrderPlacedMail($order));
+                Mail::to(setting('contact_email', 'info@gosmomo.com'))->send(new AdminNewOrderMail($order));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send order placement emails for order #{$order->order_number}: " . $e->getMessage());
+            }
 
             // Clear Cart
             $cart->items()->delete();

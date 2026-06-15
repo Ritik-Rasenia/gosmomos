@@ -23,7 +23,7 @@
 }
 .sidebar-link:hover, .sidebar-link.active {
     background: rgba(15, 81, 50, 0.08);
-    color: #0F5132;
+    color: #FF7A00;
 }
 </style>
 @endsection
@@ -35,7 +35,7 @@
         <div class="col-lg-3">
             <div class="del-sidebar">
                 <div class="text-center mb-4">
-                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #0F5132, #D4A017); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
+                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #FF7A00, #FF7A00); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
                         🚴
                     </div>
                     <h5 class="fw-bold mb-1">Delivery Partner</h5>
@@ -68,15 +68,20 @@
             <div class="glass-card p-4">
                 <h5 class="fw-bold mb-4">Orders Pool (Ready for Pickup)</h5>
 
-                @php $poolOrders = \App\Models\Order::where('status', 'packed')->get(); @endphp
                 @forelse($poolOrders as $order)
                 <div class="d-flex justify-content-between align-items-center border-bottom py-3">
                     <div>
                         <div class="fw-bold text-success">Order #{{ $order->order_number }}</div>
-                        <div class="text-muted small">Pickup: {{ $order->location->name }} • Delivery: {{ $order->address ? $order->address->address_line1 : 'N/A' }}</div>
+                        <div class="text-muted small">
+                            <strong>Pickup:</strong> {{ $order->location->name }}<br>
+                            <strong>Delivery:</strong> {{ $order->address ? $order->address->address_line_1 : 'Self Pickup' }}, {{ $order->address ? $order->address->city : '' }}
+                        </div>
                     </div>
                     <div>
-                        <button class="btn btn-success btn-sm rounded-pill px-3"><i class="bi bi-check-lg me-1"></i> Accept Delivery</button>
+                        <form action="{{ route('delivery.orders.accept', $order->id) }}" method="POST" class="accept-order-form">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-sm rounded-pill px-3"><i class="bi bi-check-lg me-1"></i> Accept Delivery</button>
+                        </form>
                     </div>
                 </div>
                 @empty
@@ -89,4 +94,29 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('.accept-order-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        Swal.fire({
+            title: 'Accept this delivery?',
+            text: "You will be assigned to deliver this order.",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#FF7A00',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Accept It!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
 @endsection

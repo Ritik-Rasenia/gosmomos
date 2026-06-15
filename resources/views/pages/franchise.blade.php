@@ -4,10 +4,37 @@
 
 @section('styles')
 <style>
-.fran-hero {
-    background: linear-gradient(135deg, #0a3620 0%, #0F5132 100%);
-    padding: 100px 0 60px;
-    color: white;
+/* Mobile background */
+@media (max-width: 575.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/franchise-mobile.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Tablet background */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/franchise-tablet.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Laptop background */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/franchise-laptop.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Desktop background */
+@media (min-width: 1200px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/franchise-desktop.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
 }
 .model-card {
     background: white;
@@ -19,7 +46,7 @@
 }
 .model-card:hover {
     transform: translateY(-5px);
-    border-color: #D4A017;
+    border-color: #FF7A00;
     box-shadow: 0 15px 40px rgba(212,160,23,0.15);
 }
 .calculator-box {
@@ -31,13 +58,19 @@
 @endsection
 
 @section('content')
-<div class="fran-hero text-center">
-    <div class="container">
-        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3">Expansion Plan</span>
-        <h1 class="display-5 fw-bold text-white">Franchise Opportunities</h1>
-        <p class="lead text-white-75 mb-0">Partner with India's fastest-growing premium momo startup and build a highly profitable business.</p>
+<section class="page-hero text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 text-uppercase">Expansion Plan</span>
+        <h1 class="display-4 fw-extrabold text-white mb-2">Franchise Opportunities</h1>
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Franchise</li>
+            </ol>
+        </nav>
+        <p class="lead text-white-75 max-width-600 mx-auto">Partner with India's fastest-growing premium momo startup and build a highly profitable business.</p>
     </div>
-</div>
+</section>
 
 <div class="container py-5" id="models">
     <div class="text-center mb-5" data-aos="fade-up">
@@ -67,7 +100,7 @@
 
         {{-- Kiosk Model --}}
         <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-            <div class="model-card p-4 h-100 d-flex flex-column justify-content-between" style="border-color:#D4A017; box-shadow: 0 15px 40px rgba(212,160,23,0.1);">
+            <div class="model-card p-4 h-100 d-flex flex-column justify-content-between" style="border-color:#FF7A00; box-shadow: 0 15px 40px rgba(212,160,23,0.1);">
                 <div>
                     <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 fw-bold rounded-pill">Popular</span>
                     <div style="font-size: 50px; margin-bottom: 15px;">🏪</div>

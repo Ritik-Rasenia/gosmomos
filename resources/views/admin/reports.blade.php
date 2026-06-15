@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
             datasets: [{
                 label: 'Monthly Sales (INR)',
                 data: [120000, 190000, 300000, 500000, 200000, 420000],
-                borderColor: '#0F5132',
+                borderColor: '#FF7A00',
                 backgroundColor: 'rgba(15, 81, 82, 0.1)',
                 borderWidth: 3,
                 fill: true,
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
             labels: ['Steamed Veg', 'Kurkure Chicken', 'Tandoori Paneer'],
             datasets: [{
                 data: [45, 35, 20],
-                backgroundColor: ['#0F5132', '#D4A017', '#E63946']
+                backgroundColor: ['#FF7A00', '#FF7A00', '#E63946']
             }]
         },
         options: {

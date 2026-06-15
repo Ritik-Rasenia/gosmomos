@@ -40,7 +40,7 @@
         <div class="col-lg-3">
             <div class="fran-sidebar">
                 <div class="text-center mb-4">
-                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #0F5132, #D4A017); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
+                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #FF7A00, #FF7A00); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
                         🏢
                     </div>
                     <h5 class="fw-bold mb-1">Franchise Partner</h5>

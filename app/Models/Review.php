@@ -12,6 +12,7 @@ class Review extends Model
         'order_id',
         'rating',
         'comment',
+        'image',
         'is_approved',
         'admin_reply',
     ];
@@ -34,6 +35,17 @@ class Review extends Model
     public function order()
     {
         return $this->belongsTo(Order::class);
+    }
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null;
+        }
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+        return asset('storage/' . $this->image);
     }
 
     public function scopeApproved($query)

@@ -21,9 +21,9 @@
     font-weight: 600;
 }
 .method-tab.active {
-    border-color: #0F5132;
+    border-color: #FF7A00;
     background: rgba(15, 81, 50, 0.05);
-    color: #0F5132;
+    color: #FF7A00;
 }
 .address-card {
     cursor: pointer;
@@ -34,7 +34,7 @@
     transition: all 0.3s ease;
 }
 .address-card.active {
-    border-color: #0F5132;
+    border-color: #FF7A00;
     background: rgba(15, 81, 50, 0.03);
 }
 </style>
@@ -152,9 +152,22 @@
                 <div class="checkout-card position-sticky" style="top: 90px;">
                     <h5 class="fw-bold mb-4">Your Order</h5>
                     @foreach($cart->items as $item)
-                    <div class="d-flex justify-content-between mb-3 small">
-                        <span>{{ $item->product->name }} x {{ $item->quantity }}</span>
-                        <span class="fw-bold">₹{{ number_format($item->subtotal, 0) }}</span>
+                    <div class="d-flex align-items-center justify-content-between mb-3 gap-2">
+                        <div class="d-flex align-items-center gap-2">
+                            @if($item->product->image_url)
+                                <img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" style="width:40px; height:40px; border-radius:6px; object-fit:cover; flex-shrink:0;">
+                            @else
+                                <div class="d-flex align-items-center justify-content-center text-white bg-orange" style="width:40px; height:40px; border-radius:6px; font-size:16px; background-color:#FF7A00 !important;">🥟</div>
+                            @endif
+                            <div>
+                                <span class="fw-semibold small d-block">{{ $item->product->name }}</span>
+                                @if($item->variant)
+                                    <span class="text-muted d-block" style="font-size: 10px;">{{ $item->variant->name }}</span>
+                                @endif
+                                <span class="text-muted" style="font-size: 11px;">Qty: {{ $item->quantity }}</span>
+                            </div>
+                        </div>
+                        <span class="fw-bold small text-success">₹{{ number_format($item->subtotal, 0) }}</span>
                     </div>
                     @endforeach
                     <hr>
@@ -203,6 +216,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
 function setMethod(method) {
     $('.method-tab').removeClass('active');
@@ -265,5 +279,92 @@ function applyCouponCode() {
         }
     });
 }
+
+$(document).ready(function() {
+    $('#checkout-form').on('submit', function(e) {
+        const payMethod = $('input[name="payment_method"]:checked').val();
+        
+        // Intercept if Razorpay is chosen and payment ID is not yet generated
+        if (payMethod === 'razorpay' && !$('#razorpay_payment_id').length) {
+            e.preventDefault();
+            
+            const totalText = $('#summary-total').text().replace(/[^\d.]/g, '');
+            const totalAmount = parseFloat(totalText);
+            
+            if (isNaN(totalAmount) || totalAmount <= 0) {
+                Swal.fire('Error', 'Invalid order total.', 'error');
+                return;
+            }
+            
+            // Custom premium mock Razorpay Sandbox checkout modal
+            Swal.fire({
+                title: '<div class="d-flex align-items-center justify-content-center gap-2 mt-2"><img src="https://razorpay.com/favicon.png" style="width: 24px; height: 24px; object-fit: contain;"> <span style="color: #0b2559; font-weight: 800; font-family: var(--font-outfit);">Razorpay</span> <span class="badge bg-warning text-dark font-monospace" style="font-size: 10px !important; padding: 4px 8px; border-radius: 4px;">TEST SANDBOX</span></div>',
+                html: `
+                    <div class="text-center p-1" style="font-family: var(--font-poppins);">
+                        <div class="mb-3 border-bottom pb-3 mt-2">
+                            <span class="text-muted small d-block text-uppercase" style="letter-spacing: 0.5px; font-size: 11px;">MERCHANT</span>
+                            <strong class="text-dark fs-5" style="font-family: var(--font-outfit);">GOS MOMO</strong>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-muted small d-block text-uppercase" style="letter-spacing: 0.5px; font-size: 11px;">AMOUNT TO PAY</span>
+                            <h2 class="fw-bold text-success mt-1" style="font-family: var(--font-outfit); font-size: 28px;">₹${totalAmount.toLocaleString('en-IN')}</h2>
+                        </div>
+                        <div class="alert alert-info py-2 small border-0 text-start d-flex align-items-start gap-2 mb-0" style="background-color: rgba(13, 202, 240, 0.08); border-radius: 10px;">
+                            <i class="bi bi-info-circle-fill text-info fs-5 mt-0"></i>
+                            <div style="font-size: 12px; color: #087990;">
+                                You are in <strong>Sandbox Bypass Mode</strong>. This will simulate a successful online transaction and forward a mock transaction token.
+                            </div>
+                        </div>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<i class="bi bi-shield-fill-check me-1"></i> Simulate Payment Success',
+                confirmButtonColor: '#0b2559',
+                cancelButtonText: '<i class="bi bi-x-circle me-1"></i> Cancel',
+                cancelButtonColor: '#dc3545',
+                customClass: {
+                    popup: 'rounded-4 shadow-lg border-0',
+                    confirmButton: 'px-4 py-2 rounded-pill fw-bold small',
+                    cancelButton: 'px-4 py-2 rounded-pill fw-bold small'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const mockPaymentId = 'pay_test_' + Math.random().toString(36).substring(2, 16).toUpperCase();
+                    
+                    $('<input>').attr({
+                        type: 'hidden',
+                        id: 'razorpay_payment_id',
+                        name: 'razorpay_payment_id',
+                        value: mockPaymentId
+                    }).appendTo('#checkout-form');
+                    
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        icon: 'success',
+                        title: 'Payment simulated successfully!',
+                        timerProgressBar: true
+                    });
+                    
+                    setTimeout(function() {
+                        $('#checkout-form')[0].submit();
+                    }, 1200);
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        icon: 'info',
+                        title: 'Payment cancelled.',
+                        timerProgressBar: true
+                    });
+                }
+            });
+        }
+    });
+});
 </script>
 @endsection

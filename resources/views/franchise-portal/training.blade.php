@@ -35,7 +35,7 @@
         <div class="col-lg-3">
             <div class="fran-sidebar">
                 <div class="text-center mb-4">
-                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #0F5132, #D4A017); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
+                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #FF7A00, #FF7A00); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
                         🏢
                     </div>
                     <h5 class="fw-bold mb-1">Franchise Partner</h5>
@@ -75,8 +75,8 @@
                 <div class="row g-3">
                     @foreach([
                         ['icon'=>'bi-file-earmark-pdf-fill','title'=>'Kitchen Prep & Hygiene Manual','desc'=>'SOP for kitchen cleaning, raw material storage, and hygiene standards.','type'=>'PDF Document','color'=>'#E63946'],
-                        ['icon'=>'bi-play-btn-fill','title'=>'Signature Momo Steaming SOP','desc'=>'Video tutorial on perfect dough folding and steaming timeline.','type'=>'Video Course','color'=>'#0F5132'],
-                        ['icon'=>'bi-people-fill','title'=>'Billing & POS System Guide','desc'=>'How to use the custom GOS POS system and process online orders.','type'=>'User Guide','color'=>'#D4A017'],
+                        ['icon'=>'bi-play-btn-fill','title'=>'Signature Momo Steaming SOP','desc'=>'Video tutorial on perfect dough folding and steaming timeline.','type'=>'Video Course','color'=>'#FF7A00'],
+                        ['icon'=>'bi-people-fill','title'=>'Billing & POS System Guide','desc'=>'How to use the custom GOS POS system and process online orders.','type'=>'User Guide','color'=>'#FF7A00'],
                     ] as $course)
                     <div class="col-md-6">
                         <div class="p-3 bg-light rounded-4 h-100 d-flex flex-column justify-content-between">

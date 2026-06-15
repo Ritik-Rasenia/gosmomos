@@ -6,7 +6,7 @@
 <style>
 .auth-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #0a3620 0%, #0F5132 50%, #1a6b42 100%);
+    background: linear-gradient(135deg, #0E101A 0%, #FF7A00 50%, #1a6b42 100%);
     display: flex;
     align-items: center;
     padding: 40px 16px;
@@ -21,33 +21,36 @@
     max-width: 440px;
     margin: auto;
 }
-.auth-logo { font-family: 'Outfit',sans-serif; font-weight: 800; font-size: 2rem; color: #0F5132; }
-.auth-logo span { color: #D4A017; }
+.auth-logo { font-family: 'Outfit',sans-serif; font-weight: 800; font-size: 2rem; color: #FF7A00; }
+.auth-logo span { color: #FF7A00; }
 .phone-input-group .input-group-text {
-    background: #0F5132; color: white; border: none; border-radius: 12px 0 0 12px; font-weight: 600;
+    background: #FF7A00; color: white; border: none; border-radius: 12px 0 0 12px; font-weight: 600;
 }
 .form-control-gos {
     border: 2px solid #e9ecef; border-radius: 12px; padding: 12px 16px;
     font-family: 'Poppins',sans-serif; font-size: 15px; transition: all 0.3s ease;
 }
 .form-control-gos:focus {
-    border-color: #0F5132; box-shadow: 0 0 0 3px rgba(15,81,50,0.1); outline: none;
+    border-color: #FF7A00; box-shadow: 0 0 0 3px rgba(15,81,50,0.1); outline: none;
 }
 .otp-input { letter-spacing: 8px; font-size: 24px; font-weight: 700; text-align: center; }
 .btn-otp {
-    background: linear-gradient(135deg, #0F5132, #157347);
-    color: white; border: none; border-radius: 12px; padding: 12px;
+    background: linear-gradient(135deg, #FF7A00, #E26C00);
+    color: white; border: none; border-radius: 8px; padding: 12px;
     font-weight: 700; font-size: 16px; width: 100%; cursor: pointer;
     transition: all 0.3s ease;
+}
+.btn, .tab-auth .nav-link, .form-control-gos, .phone-input-group .input-group-text, #phone-input, #password-field, .btn-outline-secondary {
+    border-radius: 8px !important;
 }
 .btn-otp:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15,81,50,0.3); }
 .btn-otp:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .tab-auth .nav-link { border-radius: 12px; font-weight: 600; color: #6C757D; padding: 10px 20px; }
-.tab-auth .nav-link.active { background: #0F5132; color: white; }
+.tab-auth .nav-link.active { background: #FF7A00; color: white; }
 .divider { display: flex; align-items: center; gap: 12px; color: #adb5bd; font-size: 13px; margin: 20px 0; }
 .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e9ecef; }
 .otp-timer { font-size: 13px; color: #6C757D; }
-.otp-timer .countdown { color: #0F5132; font-weight: 700; }
+.otp-timer .countdown { color: #FF7A00; font-weight: 700; }
 </style>
 @endsection
 
@@ -55,7 +58,13 @@
 <div class="auth-page">
     <div class="auth-card">
         <div class="text-center mb-4">
-            <a href="{{ route('home') }}" class="auth-logo text-decoration-none">GOS <span>MOMO</span></a>
+            <a href="{{ route('home') }}" class="auth-logo text-decoration-none">
+                @if(setting('logo'))
+                    <img src="{{ asset(setting('logo')) }}" alt="{{ setting('site_name', 'GOS MOMO') }}" style="max-height: 100px; height: 100px; width: auto; object-fit: contain; margin-bottom: 10px;">
+                @else
+                    GOS <span>MOMO</span>
+                @endif
+            </a>
             <p class="text-muted mt-1 mb-0">Welcome back! Please login to continue.</p>
         </div>
 
@@ -78,12 +87,12 @@
             {{-- OTP LOGIN --}}
             <div class="tab-pane fade show active" id="otp-tab">
 
-                {{-- Step 1: Enter Phone --}}
-                <div id="step-phone">
-                    <p class="text-muted small mb-3">Enter your 10-digit mobile number to receive an OTP.</p>
-                    <div class="input-group mb-4 phone-input-group">
-                        <span class="input-group-text"><i class="bi bi-phone-fill me-1"></i> +91</span>
-                        <input type="tel" id="phone-input" class="form-control form-control-gos" placeholder="98765 43210" maxlength="10" style="border-radius: 0 12px 12px 0;">
+                {{-- Step 1: Enter Email --}}
+                <div id="step-email">
+                    <p class="text-muted small mb-3">Enter your registered email address to receive an OTP.</p>
+                    <div class="input-group mb-4">
+                        <span class="input-group-text bg-orange text-white" style="border: none; border-radius: 8px 0 0 8px; background-color: #FF7A00;"><i class="bi bi-envelope-fill text-white"></i></span>
+                        <input type="email" id="email-input" class="form-control form-control-gos" placeholder="yourname@example.com" style="border-radius: 0 8px 8px 0 !important;">
                     </div>
                     <button class="btn-otp" id="send-otp-btn">
                         <i class="bi bi-shield-lock me-1"></i> Send OTP
@@ -96,7 +105,7 @@
                     <div class="text-center mb-3">
                         <i class="bi bi-shield-check fs-1 text-success d-block mb-2"></i>
                         <h5 class="fw-bold">Enter OTP</h5>
-                        <p class="text-muted small">6-digit OTP sent to +91 <span id="otp-phone-display"></span><br><small class="text-warning">(For testing, use: <strong>123456</strong>)</small></p>
+                        <p class="text-muted small">6-digit OTP sent to <span id="otp-email-display" class="fw-semibold text-dark"></span></p>
                     </div>
                     <input type="tel" id="otp-input" class="form-control form-control-gos otp-input mb-4" placeholder="••••••" maxlength="6">
                     <button class="btn-otp" id="verify-otp-btn">
@@ -107,7 +116,7 @@
                         <a href="#" id="resend-otp-btn" class="text-success fw-bold d-none">Resend OTP</a>
                     </div>
                     <div class="text-center mt-2">
-                        <a href="#" id="change-phone-btn" class="text-muted small">← Change number</a>
+                        <a href="#" id="change-email-btn" class="text-muted small">← Change email</a>
                     </div>
                 </div>
             </div>
@@ -135,28 +144,32 @@
                     <button type="submit" class="btn-otp">
                         <i class="bi bi-box-arrow-in-right me-1"></i> Login
                     </button>
-                    <p class="text-center text-muted small mt-3">Admin/staff accounts use email login.</p>
+                    
+                    <div class="mt-3 bg-light border p-3 rounded-3">
+                        <div class="fw-bold mb-2 small text-muted text-start"><i class="bi bi-shield-lock-fill text-orange"></i> Quick Demo Logins:</div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <button type="button" class="btn btn-xs btn-outline-dark w-100 py-1" onclick="fillCustomerCreds('delivery@gosmomo.com', 'delivery123')" style="font-size: 11px; font-weight: 600;">
+                                    Delivery Boy
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn btn-xs btn-outline-dark w-100 py-1" onclick="fillCustomerCreds('customer@gosmomo.com', 'customer123')" style="font-size: 11px; font-weight: 600;">
+                                    Demo Customer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-center text-muted small mt-3 mb-0">Admin/staff/partner accounts use email login.</p>
                 </form>
             </div>
         </div>
 
-        <div class="divider">or continue with</div>
 
-        <div class="row g-3">
-            <div class="col-6">
-                <a href="#" class="btn btn-outline-secondary w-100 rounded-3 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="font-size: 14px;">
-                    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.79-.07-1.54-.19-2.27h-11.3v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/><path fill="#34A853" d="M12.255 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96h-3.98v3.09C3.515 21.3 7.615 24 12.255 24z"/><path fill="#FBBC05" d="M5.525 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62h-3.98a11.86 11.86 0 000 10.76l3.98-3.09z"/><path fill="#EA4335" d="M12.255 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C18.205 1.19 15.495 0 12.255 0c-4.64 0-8.74 2.7-10.71 6.62l3.98 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
-                    Google
-                </a>
-            </div>
-            <div class="col-6">
-                <a href="#" class="btn btn-outline-secondary w-100 rounded-3 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2" style="font-size: 14px;">
-                    <i class="bi bi-facebook text-primary fs-5"></i> Facebook
-                </a>
-            </div>
-        </div>
 
-        <div class="text-center mt-4">
+        <div class="text-center mt-3">
+            <p class="small text-muted mb-2">Don't have a customer account? <a href="{{ route('register') }}" class="text-orange fw-bold text-decoration-none" style="color:#FF7A00;">Register Here</a></p>
             <a href="{{ route('home') }}" class="text-muted small text-decoration-none">
                 <i class="bi bi-arrow-left me-1"></i> Back to Home
             </a>
@@ -169,13 +182,13 @@
 <script>
 $(document).ready(function() {
     let countdownTimer;
-    let currentPhone = '';
+    let currentEmail = '';
 
     // Send OTP
     $('#send-otp-btn').on('click', function() {
-        const phone = $('#phone-input').val().trim();
-        if (phone.length !== 10 || !/^\d+$/.test(phone)) {
-            showError('Please enter a valid 10-digit mobile number.');
+        const email = $('#email-input').val().trim();
+        if (email === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showError('Please enter a valid email address.');
             return;
         }
 
@@ -185,13 +198,13 @@ $(document).ready(function() {
         $.ajax({
             url: "{{ route('login.otp.send') }}",
             method: 'POST',
-            data: { _token: "{{ csrf_token() }}", phone: phone },
+            data: { _token: "{{ csrf_token() }}", email: email },
             success: function(res) {
                 if (res.success) {
-                    currentPhone = phone;
-                    $('#step-phone').addClass('d-none');
+                    currentEmail = email;
+                    $('#step-email').addClass('d-none');
                     $('#step-otp').removeClass('d-none');
-                    $('#otp-phone-display').text(phone);
+                    $('#otp-email-display').text(email);
                     startCountdown();
                 }
             },
@@ -216,7 +229,7 @@ $(document).ready(function() {
         $.ajax({
             url: "{{ route('login.otp.verify') }}",
             method: 'POST',
-            data: { _token: "{{ csrf_token() }}", phone: currentPhone, otp: otp },
+            data: { _token: "{{ csrf_token() }}", email: currentEmail, otp: otp },
             success: function(res) {
                 if (res.success) {
                     btn.html('<i class="bi bi-check-circle me-1"></i> Login successful!');
@@ -230,12 +243,12 @@ $(document).ready(function() {
         });
     });
 
-    // Change phone
-    $('#change-phone-btn').on('click', function(e) {
+    // Change email
+    $('#change-email-btn').on('click', function(e) {
         e.preventDefault();
         clearInterval(countdownTimer);
         $('#step-otp').addClass('d-none');
-        $('#step-phone').removeClass('d-none');
+        $('#step-email').removeClass('d-none');
         $('#send-otp-btn').prop('disabled', false).html('<i class="bi bi-shield-lock me-1"></i> Send OTP');
     });
 
@@ -244,7 +257,7 @@ $(document).ready(function() {
         e.preventDefault();
         $('#send-otp-btn').trigger('click');
         $('#step-otp').addClass('d-none');
-        $('#step-phone').removeClass('d-none');
+        $('#step-email').removeClass('d-none');
     });
 
     function startCountdown() {
@@ -282,6 +295,24 @@ $(document).ready(function() {
             field.attr('type', 'password');
             icon.removeClass('bi-eye-slash').addClass('bi-eye');
         }
+    };
+
+    // Quick Demo helper
+    window.fillCustomerCreds = function(email, password) {
+        $('#email-tab input[name="email"]').val(email);
+        $('#email-tab input[name="password"]').val(password);
+        
+        // Brief border glow effect
+        $('#email-tab input[name="email"]').css('border-color', '#FF7A00');
+        $('#email-tab input[name="password"]').css('border-color', '#FF7A00');
+        setTimeout(() => {
+            $('#email-tab input[name="email"]').css('border-color', '');
+            $('#email-tab input[name="password"]').css('border-color', '');
+        }, 800);
+
+        // Switch to the email tab
+        const emailTab = new bootstrap.Tab(document.querySelector('#authTab li:last-child button'));
+        emailTab.show();
     };
 });
 </script>

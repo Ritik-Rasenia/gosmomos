@@ -50,4 +50,26 @@ class Blog extends Model
         }
         return asset('storage/' . $this->image);
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(BlogReview::class)->latest();
+    }
+
+    public function averageRating()
+    {
+        return round($this->reviews()->approved()->avg('rating') ?? 0, 1);
+    }
+
+    public function approvedReviewsCount()
+    {
+        return $this->reviews()->approved()->count();
+    }
+
+    public function getReadingTimeAttribute()
+    {
+        $wordsCount = str_word_count(strip_tags($this->content));
+        $minutes = ceil($wordsCount / 200);
+        return $minutes > 0 ? $minutes : 1;
+    }
 }

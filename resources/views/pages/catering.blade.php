@@ -4,10 +4,37 @@
 
 @section('styles')
 <style>
-.catering-hero {
-    background: linear-gradient(135deg, #0a3620 0%, #0F5132 100%);
-    padding: 100px 0 60px;
-    color: white;
+/* Mobile background */
+@media (max-width: 575.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/catering-mobile.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Tablet background */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/catering-tablet.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Laptop background */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/catering-laptop.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Desktop background */
+@media (min-width: 1200px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/catering-desktop.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
 }
 .catering-card {
     background: white;
@@ -19,13 +46,19 @@
 @endsection
 
 @section('content')
-<div class="catering-hero text-center">
-    <div class="container">
-        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3">Make It Special</span>
-        <h1 class="display-5 fw-bold text-white">Catering & Event Bookings</h1>
-        <p class="lead text-white-75 mb-0">Treat your guests to the crunchiest, fresh momos prepared live at your venue!</p>
+<section class="page-hero text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 text-uppercase">Make It Special</span>
+        <h1 class="display-4 fw-extrabold text-white mb-2">Catering & Event Bookings</h1>
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Catering</li>
+            </ol>
+        </nav>
+        <p class="lead text-white-75 max-width-600 mx-auto">Treat your guests to the crunchiest, fresh momos prepared live at your venue!</p>
     </div>
-</div>
+</section>
 
 <div class="container py-5">
     <div class="row g-5">
@@ -35,19 +68,19 @@
             
             <div class="d-flex flex-column gap-3 my-4">
                 <div class="d-flex align-items-center gap-3">
-                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(15,81,50,0.1); color:#0F5132; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(15,81,50,0.1); color:#FF7A00; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="bi bi-check-lg fw-bold"></i>
                     </div>
                     <span class="fw-semibold text-muted">Custom Menu Tailored to Your Guest Preferences</span>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(15,81,50,0.1); color:#0F5132; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(15,81,50,0.1); color:#FF7A00; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="bi bi-check-lg fw-bold"></i>
                     </div>
                     <span class="fw-semibold text-muted">Complete Live Prep Station with Trained Chefs</span>
                 </div>
                 <div class="d-flex align-items-center gap-3">
-                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(15,81,50,0.1); color:#0F5132; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <div style="width:40px; height:40px; border-radius:50%; background:rgba(15,81,50,0.1); color:#FF7A00; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <i class="bi bi-check-lg fw-bold"></i>
                     </div>
                     <span class="fw-semibold text-muted">100% Hygienic Setup and Elegant Presentation</span>

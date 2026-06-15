@@ -16,8 +16,8 @@
 <div class="row g-3 mb-4">
     @php
     $stats = [
-        ['icon'=>'bi-bag-check','label'=>'Total Orders','value'=>\App\Models\Order::count(),'color'=>'#0F5132','sub'=>'All time'],
-        ['icon'=>'bi-people','label'=>'Customers','value'=>\App\Models\User::whereHas('roles', fn($q)=>$q->where('slug','customer'))->count(),'color'=>'#D4A017','sub'=>'Registered'],
+        ['icon'=>'bi-bag-check','label'=>'Total Orders','value'=>\App\Models\Order::count(),'color'=>'#FF7A00','sub'=>'All time'],
+        ['icon'=>'bi-people','label'=>'Customers','value'=>\App\Models\User::whereHas('roles', fn($q)=>$q->where('slug','customer'))->count(),'color'=>'#FF7A00','sub'=>'Registered'],
         ['icon'=>'bi-briefcase','label'=>'Franchise Leads','value'=>\App\Models\FranchiseLead::count(),'color'=>'#E63946','sub'=>'Applications'],
         ['icon'=>'bi-currency-rupee','label'=>'Total Revenue','value'=>'₹'.number_format(\App\Models\Order::where('payment_status','paid')->sum('total')),'color'=>'#6f42c1','sub'=>'Paid orders'],
     ];

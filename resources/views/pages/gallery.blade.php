@@ -4,11 +4,6 @@
 
 @section('styles')
 <style>
-.gallery-hero {
-    background: linear-gradient(135deg, #0F5132 0%, #157347 100%);
-    padding: 80px 0 40px;
-    color: white;
-}
 .gallery-card {
     border-radius: 16px;
     overflow: hidden;
@@ -32,12 +27,19 @@
 @endsection
 
 @section('content')
-<div class="gallery-hero text-center">
-    <div class="container">
-        <h1 class="fw-bold">GOS MOMO Gallery</h1>
-        <p class="text-white-75 mb-0">Explore visual highlights of our preparations, outlets, events, and dishes.</p>
+<section class="page-hero text-center">
+    <div class="container" data-aos="fade-up">
+        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 text-uppercase">Visuals</span>
+        <h1 class="display-4 fw-extrabold text-white mb-2">GOS MOMO Gallery</h1>
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Gallery</li>
+            </ol>
+        </nav>
+        <p class="lead text-white-75 max-width-600 mx-auto">Explore visual highlights of our preparations, outlets, events, and dishes.</p>
     </div>
-</div>
+</section>
 
 <div class="container py-5">
     <div class="row g-4">
@@ -47,7 +49,7 @@
                 @if($photo->image_url)
                     <img src="{{ $photo->image_url }}" alt="{{ $photo->title }}" class="w-100 h-100" style="object-fit:cover; min-height: 250px;">
                 @else
-                    <div style="min-height:250px; background:linear-gradient(135deg, #0F5132, #D4A017); display:flex; align-items:center; justify-content:center; font-size:60px;">🥟</div>
+                    <div style="min-height:250px; background:linear-gradient(135deg, #FF7A00, #FF7A00); display:flex; align-items:center; justify-content:center; font-size:60px;">🥟</div>
                 @endif
                 <div class="gallery-overlay p-3 text-center">
                     <div>
@@ -62,7 +64,7 @@
         @foreach(['🥟 Delicious Steamed Momos','🔥 Crispy Kurkure Momos','🍢 Fresh Tandoori Skewers','👨‍🍳 Our Master Chefs','📍 Lucknow Cart Launch','✨ Live Catering Buffet'] as $i => $item)
         <div class="col-6 col-md-4" data-aos="fade-up" data-aos-delay="{{ $i * 80 }}">
             <div class="gallery-card">
-                <div style="min-height: 250px; background: linear-gradient({{ $i*45 }}deg, #0F5132, #D4A017); display: flex; align-items: center; justify-content: center; font-size: 60px;">
+                <div style="min-height: 250px; background: linear-gradient({{ $i*45 }}deg, #FF7A00, #FF7A00); display: flex; align-items: center; justify-content: center; font-size: 60px;">
                     {{ ['🥟','🔥','🍢','👨‍🍳','📍','✨'][$i] }}
                 </div>
                 <div class="gallery-overlay p-3 text-center">

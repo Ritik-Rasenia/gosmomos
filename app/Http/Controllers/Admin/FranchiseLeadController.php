@@ -10,8 +10,14 @@ class FranchiseLeadController extends Controller
 {
     public function index()
     {
-        $leads = FranchiseLead::latest()->get();
+        $leads = FranchiseLead::latest()->paginate(20);
         return view('admin.franchise-leads.index', compact('leads'));
+    }
+
+    public function show($id)
+    {
+        $lead = FranchiseLead::findOrFail($id);
+        return view('admin.franchise-leads.show', compact('lead'));
     }
 
     public function updateStatus(Request $request, $id)
@@ -22,9 +28,17 @@ class FranchiseLeadController extends Controller
 
         $lead = FranchiseLead::findOrFail($id);
         $lead->update([
-            'status' => $request->status,
+            'status'      => $request->status,
+            'admin_notes' => $request->admin_notes,
+            'follow_up_date' => $request->follow_up_date,
         ]);
 
         return back()->with('success', 'Franchise lead status updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        FranchiseLead::findOrFail($id)->delete();
+        return back()->with('success', 'Lead deleted.');
     }
 }

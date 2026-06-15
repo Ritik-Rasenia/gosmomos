@@ -4,17 +4,37 @@
 
 @section('styles')
 <style>
-.story-hero {
-    background: linear-gradient(135deg, #0a3620 0%, #0F5132 100%);
-    padding: 100px 0 60px;
-    color: white;
-    position: relative;
-    overflow: hidden;
+/* Mobile background */
+@media (max-width: 575.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/story-mobile.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
 }
-.story-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54 48c-2 0-3 1-4 2v4c0 1 1 2 2 2h4c1 0 2-1 2-2v-4c-1-1-2-2-4-2zM6 48c-2 0-3 1-4 2v4c0 1 1 2 2 2h4c1 0 2-1 2-2v-4c-1-1-2-2-4-2z' fill='%23ffffff' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+/* Tablet background */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/story-tablet.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Laptop background */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/story-laptop.png') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
+}
+/* Desktop background */
+@media (min-width: 1200px) {
+    .page-hero {
+        background: linear-gradient(180deg, rgba(14, 16, 26, 0.82) 0%, rgba(255, 122, 0, 0.65) 100%), url('{{ asset('images/story-desktop.jpg') }}') !important;
+        background-size: cover !important;
+        background-position: center !important;
+    }
 }
 .story-img-wrap {
     position: relative;
@@ -22,12 +42,29 @@
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(15,81,50,0.15);
 }
+.story-img-wrap img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    display: block;
+    transition: var(--transition-smooth);
+}
+@media (max-width: 991.98px) {
+    .story-img-wrap img {
+        height: 320px !important;
+    }
+}
+@media (max-width: 575.98px) {
+    .story-img-wrap img {
+        height: 240px !important;
+    }
+}
 .story-timeline {
     position: relative;
     max-width: 800px;
     margin: 60px auto;
     padding-left: 30px;
-    border-left: 3px solid #D4A017;
+    border-left: 3px solid #FF7A00;
 }
 .timeline-item {
     position: relative;
@@ -41,17 +78,23 @@
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #0F5132;
-    border: 3px solid #D4A017;
+    background: #FF7A00;
+    border: 3px solid #FF7A00;
 }
 </style>
 @endsection
 
 @section('content')
-<section class="story-hero text-center">
-    <div class="container">
+<section class="page-hero text-center">
+    <div class="container" data-aos="fade-up">
         <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3 text-uppercase">The Journey</span>
-        <h1 class="display-4 fw-extrabold text-white">Our Story</h1>
+        <h1 class="display-4 fw-extrabold text-white mb-2">Our Story</h1>
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb justify-content-center mb-0">
+                <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                <li class="breadcrumb-item text-white active" aria-current="page">Our Story</li>
+            </ol>
+        </nav>
         <p class="lead text-white-75 max-width-600 mx-auto">From a small seed of passion for authentic flavors to India's next big food franchise.</p>
     </div>
 </section>
@@ -61,9 +104,7 @@
         <div class="row align-items-center g-5">
             <div class="col-lg-6" data-aos="fade-right">
                 <div class="story-img-wrap">
-                    <div style="height: 400px; background: linear-gradient(135deg, #0F5132, #D4A017); display: flex; align-items: center; justify-content: center; font-size: 100px;">
-                        🥟
-                    </div>
+                    <img src="https://images.unsplash.com/photo-1625220194771-7ebedd0b4d11?auto=format&fit=crop&w=800&q=80" alt="Premium Momos Prep" class="w-100 img-fluid" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=800&q=80';">
                 </div>
             </div>
             <div class="col-lg-6" data-aos="fade-left">

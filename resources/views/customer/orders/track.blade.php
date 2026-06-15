@@ -23,7 +23,7 @@
 }
 .sidebar-link:hover, .sidebar-link.active {
     background: rgba(15, 81, 50, 0.08);
-    color: #0F5132;
+    color: #FF7A00;
 }
 .track-timeline {
     position: relative;
@@ -46,7 +46,7 @@
     box-shadow: 0 0 0 3px #ced4da;
 }
 .track-node.active::before {
-    background: #0F5132; box-shadow: 0 0 0 3px #0F5132;
+    background: #FF7A00; box-shadow: 0 0 0 3px #FF7A00;
 }
 </style>
 @endsection
@@ -58,7 +58,7 @@
         <div class="col-lg-3">
             <div class="dashboard-sidebar">
                 <div class="text-center mb-4">
-                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #0F5132, #D4A017); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
+                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #FF7A00, #FF7A00); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                     <h5 class="fw-bold mb-1">{{ Auth::user()->name }}</h5>
@@ -137,4 +137,60 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    let currentStatus = "{{ $order ? $order->status : '' }}";
+    const statusMap = ['placed', 'confirmed', 'preparing', 'packed', 'out_for_delivery', 'delivered'];
+    const timelineNodes = $('.track-timeline .track-node');
+
+    function checkOrderStatus() {
+        if (!currentStatus || currentStatus === 'delivered') return;
+
+        $.ajax({
+            url: "{{ route('customer.orders.status', $order->id) }}",
+            method: "GET",
+            success: function(res) {
+                if (res.success && res.status !== currentStatus) {
+                    currentStatus = res.status;
+                    const index = statusMap.indexOf(currentStatus);
+                    
+                    // Update timeline active states
+                    timelineNodes.each(function(i) {
+                        const node = $(this);
+                        const heading = node.find('h6');
+                        if (i <= index) {
+                            node.addClass('active');
+                            heading.addClass('text-success').removeClass('text-muted');
+                        } else {
+                            node.removeClass('active');
+                            heading.addClass('text-muted').removeClass('text-success');
+                        }
+                    });
+
+                    // Fire a SweetAlert Toast
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 4000,
+                        icon: 'info',
+                        title: 'Order status updated to: ' + currentStatus.replace(/_/g, ' ').toUpperCase(),
+                        timerProgressBar: true
+                    });
+                    
+                    if (currentStatus === 'delivered') {
+                        clearInterval(pollInterval);
+                    }
+                }
+            }
+        });
+    }
+
+    // Poll every 5 seconds
+    const pollInterval = setInterval(checkOrderStatus, 5000);
+});
+</script>
 @endsection

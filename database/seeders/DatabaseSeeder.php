@@ -25,9 +25,12 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             BannerSeeder::class,
             TestimonialSeeder::class,
+            ChefSeeder::class,
             SeoPageSeeder::class,
             BlogSeeder::class,
             GallerySeeder::class,
+            PageSeeder::class,
+            DemoDataSeeder::class,
         ]);
     }
 }

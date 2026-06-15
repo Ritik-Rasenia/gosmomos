@@ -32,6 +32,25 @@ class CategoryController extends Controller
         return back()->with('success', 'Category created successfully!');
     }
 
+    public function update(Request $request, $id)
+    {
+        $category = Category::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:50|unique:categories,name,' . $category->id,
+            'icon' => 'nullable|string|max:50',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'icon' => $request->icon ?? 'bi-grid',
+            'is_active' => $request->has('is_active'),
+        ]);
+
+        return back()->with('success', 'Category updated successfully!');
+    }
+
     public function destroy($id)
     {
         $category = Category::findOrFail($id);

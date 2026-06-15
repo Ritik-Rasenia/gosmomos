@@ -23,7 +23,7 @@
 }
 .sidebar-link:hover, .sidebar-link.active {
     background: rgba(15, 81, 50, 0.08);
-    color: #0F5132;
+    color: #FF7A00;
 }
 </style>
 @endsection
@@ -35,7 +35,7 @@
         <div class="col-lg-3">
             <div class="dashboard-sidebar">
                 <div class="text-center mb-4">
-                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #0F5132, #D4A017); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
+                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #FF7A00, #FF7A00); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                     <h5 class="fw-bold mb-1">{{ Auth::user()->name }}</h5>
@@ -71,7 +71,7 @@
 
         {{-- Order Details --}}
         <div class="col-lg-9">
-            @php $order = \App\Models\Order::with(['items','location','address'])->find($id); @endphp
+            @php $order = \App\Models\Order::with(['items.product','location','address'])->find($id); @endphp
             @if($order)
             <div class="glass-card p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -106,13 +106,20 @@
 
                 <h6 class="fw-bold my-3">Items Summary</h6>
                 @foreach($order->items as $item)
-                <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                    <div>
-                        <div class="fw-semibold">{{ $item->product_name }}</div>
-                        @if($item->variant_name)
-                            <span class="badge bg-light text-dark border">{{ $item->variant_name }}</span>
+                <div class="d-flex justify-content-between align-items-center py-2 border-bottom gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        @if($item->product && $item->product->image_url)
+                            <img src="{{ $item->product->image_url }}" alt="{{ $item->product_name }}" style="width:50px; height:50px; border-radius:8px; object-fit:cover; flex-shrink:0;">
+                        @else
+                            <div class="d-flex align-items-center justify-content-center text-white bg-orange" style="width:50px; height:50px; border-radius:8px; font-size:16px; background-color:#FF7A00 !important; flex-shrink:0;">🥟</div>
                         @endif
-                        <div class="text-muted small">₹{{ number_format($item->price, 0) }} x {{ $item->quantity }}</div>
+                        <div>
+                            <div class="fw-semibold">{{ $item->product_name }}</div>
+                            @if($item->variant_name)
+                                <span class="badge bg-light text-dark border">{{ $item->variant_name }}</span>
+                            @endif
+                            <div class="text-muted small">₹{{ number_format($item->price, 0) }} x {{ $item->quantity }}</div>
+                        </div>
                     </div>
                     <div class="fw-bold text-success">₹{{ number_format($item->total, 0) }}</div>
                 </div>

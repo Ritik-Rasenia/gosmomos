@@ -23,7 +23,7 @@
 }
 .sidebar-link:hover, .sidebar-link.active {
     background: rgba(15, 81, 50, 0.08);
-    color: #0F5132;
+    color: #FF7A00;
 }
 </style>
 @endsection
@@ -35,7 +35,7 @@
         <div class="col-lg-3">
             <div class="del-sidebar">
                 <div class="text-center mb-4">
-                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #0F5132, #D4A017); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
+                    <div style="width:70px; height:70px; border-radius:50%; background: linear-gradient(135deg, #FF7A00, #FF7A00); color:white; display:flex; align-items:center; justify-content:center; font-size:30px; font-weight:700; margin: 0 auto 12px;">
                         🚴
                     </div>
                     <h5 class="fw-bold mb-1">Delivery Partner</h5>
@@ -66,36 +66,88 @@
         {{-- Active Delivery details --}}
         <div class="col-lg-9">
             <div class="glass-card p-4">
-                <h5 class="fw-bold mb-4">Active Delivery Details</h5>
+                <h5 class="fw-bold mb-4"><i class="bi bi-bicycle text-orange me-2"></i>Active Delivery Details</h5>
 
-                @php $activeOrder = \App\Models\Order::where('status', 'out_for_delivery')->first(); @endphp
                 @if($activeOrder)
-                <div class="row g-3">
+                <div class="row g-4">
                     <div class="col-md-6">
-                        <h6 class="text-muted fw-bold">ORDER NUMBER</h6>
+                        <h6 class="text-muted fw-bold small">ORDER NUMBER</h6>
                         <h4 class="fw-bold text-success">#{{ $activeOrder->order_number }}</h4>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="text-muted fw-bold">CUSTOMER</h6>
-                        <h4 class="fw-bold">{{ $activeOrder->user->name }}</h4>
-                        <div class="small text-muted">{{ $activeOrder->user->phone }}</div>
+                        <h6 class="text-muted fw-bold small">CUSTOMER</h6>
+                        <h4 class="fw-bold mb-1">{{ $activeOrder->user->name }}</h4>
+                        <div class="text-muted small"><i class="bi bi-telephone-fill me-1"></i> {{ $activeOrder->user->phone }}</div>
                     </div>
                     <div class="col-12">
-                        <h6 class="text-muted fw-bold">DELIVERY ADDRESS</h6>
-                        <p class="fw-bold mb-0">{{ $activeOrder->address ? $activeOrder->address->address_line1 : 'N/A' }}, {{ $activeOrder->address ? $activeOrder->address->city : '' }}</p>
+                        <h6 class="text-muted fw-bold small">DELIVERY ADDRESS</h6>
+                        <p class="fw-bold mb-0 text-dark">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                            {{ $activeOrder->address ? $activeOrder->address->address_line_1 : 'Self Pickup' }}, {{ $activeOrder->address ? $activeOrder->address->city : '' }}
+                        </p>
                     </div>
+
+                    <div class="col-12">
+                        <h6 class="text-muted fw-bold small mb-3">ITEMS IN THIS ORDER</h6>
+                        <div class="border rounded-3 p-3 bg-light">
+                            @foreach($activeOrder->items as $item)
+                            <div class="d-flex justify-content-between align-items-center {{ !$loop->last ? 'border-bottom pb-2 mb-2' : '' }} small">
+                                <span>{{ $item->product_name }} {{ $item->variant_name ? '(' . $item->variant_name . ')' : '' }} <strong>x {{ $item->quantity }}</strong></span>
+                                <span class="fw-bold">₹{{ number_format($item->price * $item->quantity, 0) }}</span>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    @if($activeOrder->special_instructions)
+                    <div class="col-12">
+                        <h6 class="text-muted fw-bold small">SPECIAL INSTRUCTIONS</h6>
+                        <div class="alert alert-warning py-2 px-3 small rounded-3 mb-0">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ $activeOrder->special_instructions }}
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="col-12 mt-4">
-                        <button class="btn btn-success btn-lg w-100 rounded-pill"><i class="bi bi-check-circle me-1"></i> Mark as Delivered</button>
+                        <form action="{{ route('delivery.orders.deliver', $activeOrder->id) }}" method="POST" class="deliver-order-form">
+                            @csrf
+                            <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill"><i class="bi bi-check-circle me-2"></i> Mark as Delivered</button>
+                        </form>
                     </div>
                 </div>
                 @else
                 <div class="text-center py-5 text-muted">
                     <i class="bi bi-bicycle fs-1 mb-2 d-block opacity-25"></i>
-                    <p class="mb-0">You have no active deliveries right now.</p>
+                    <p class="mb-0">You have no active deliveries right now. Go to <a href="{{ route('delivery.orders') }}">Orders Pool</a> to pick an order.</p>
                 </div>
                 @endif
             </div>
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+$(document).ready(function() {
+    $('.deliver-order-form').on('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        Swal.fire({
+            title: 'Confirm Delivery?',
+            text: "Are you sure you want to mark this order as delivered?",
+            icon: 'success',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Delivered!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+});
+</script>
 @endsection
